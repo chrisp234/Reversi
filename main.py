@@ -1,11 +1,10 @@
-import consoleView
-import game
-import gameController
+import consoleView 
+import game 
+import gameController 
 
 # Create instances of Model, View and Controller
-game = Game()
-view = ConsoleView()
-controller = GameController(game, view)
+game = game.Game()
+view = consoleView.ConsoleView(game)
+controller = gameController.GameController(game, view)
 
 # Start the game
-controller.play_game()
