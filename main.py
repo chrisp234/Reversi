@@ -8,3 +8,4 @@ view = consoleView.ConsoleView(game)
 controller = gameController.GameController(game, view)
 
 # Start the game
+controller.play_game()
