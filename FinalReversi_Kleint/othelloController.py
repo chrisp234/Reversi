@@ -28,6 +28,6 @@ class othelloController:
 
 
 if __name__ == "__main__":
-    size = 4
+    size = 8
     controller = othelloController(size)
     controller.play_game()
