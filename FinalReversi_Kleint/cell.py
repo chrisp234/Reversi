@@ -1,4 +1,5 @@
 
+
 symbols = [' ', 'B', 'W']
 
 class Cell:

@@ -1,22 +1,26 @@
 import numpy as np
 import board
-
+import player
 
 class othelloGame:
     def __init__(self, size):
         self.board = board.Board(size)
+        self.curr_player = player.Player.B
         middle = int(np.round(size / 2))
         self.board.set_cell(middle - 1, middle - 1, 2)
         self.board.set_cell(middle, middle, 2)
         self.board.set_cell(middle - 1, middle, 1)
         self.board.set_cell(middle, middle - 1, 1)
 
+    def get_curr_player(self):
+        return self.curr_player
+
     def get_board(self):
         return self.board.grid.copy()
 
-    # def change_player(self):
-    #     #self.curr_player = 3 - self.curr_player
-    #     pass
+    def change_player(self):
+        self.curr_player = 3 - self.curr_player
+        pass
 
     def is_valid_move(self, player, row, col):
         cell = self.board.get_cell(row, col)
@@ -48,22 +52,22 @@ class othelloGame:
                     
         return False
 
-    def get_valid_moves(self, player):
+    def get_valid_moves(self):
         moves = []
         for row in range(self.board.size):
             for col in range(self.board.size):
-                if self.is_valid_move(player, row, col):
+                if self.is_valid_move(self.curr_player, row, col):
                     moves.append((row, col))
         return moves
     
 
-    def make_move(self, player, row, col):
-        if not self.is_valid_move(player, row, col):
+    def make_move(self, row, col):
+        if not self.is_valid_move(self.curr_player, row, col):
             raise ValueError("Invalid move")
-        if self.board.set_cell(row, col, player) == -1:
+        if self.board.set_cell(row, col, self.curr_player) == -1:
             return -1
 
-        other_player = 3 - player
+        other_player = 3 - self.curr_player
         for dr in [-1, 0, 1]:
             for dc in [-1, 0, 1]:
                 if dr == 0 and dc == 0:
@@ -84,9 +88,9 @@ class othelloGame:
                     if cell == 0 or cell == -1:
                         break
 
-                    if cell == player:
+                    if cell == self.curr_player:
                         for flip_row, flip_col in positions_to_flip:
-                            if self.board.set_cell(flip_row, flip_col, player) == -1:
+                            if self.board.set_cell(flip_row, flip_col, self.curr_player) == -1:
                                 return -1
                         break
 
