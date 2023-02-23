@@ -2,12 +2,14 @@ import cell
 import debug
 
 class Board:
+    #initialize 2D array of cell objects
     def __init__(self, size):
         self.size = size
         self.grid = [[cell.Cell(0) for j in range(size)] for i in range (size)]
         self.W_num = 2
         self.B_num = 2
 
+    #string function to output the string equivalent of the grid
     def __str__(self):
         '''
         Board String method
@@ -52,7 +54,7 @@ class Board:
         return return_string
     
 
-
+    #assigns a player to a cell
     def set_cell(self, r, c, player):
         if(r < 0 or r >= self.size or c < 0 or c >=self.size):
             debug.log("ERROR IN GRID: Set Cell out of bounds")
@@ -60,6 +62,7 @@ class Board:
         
         self.grid[r][c].set_val(player)
 
+    #gets the value of a given cell
     def get_cell(self, r, c):
         if(r < 0 or r >= self.size or c < 0 or c >=self.size):
             debug.log("ERROR IN GRID: Get Cell out of bounds")
@@ -67,10 +70,11 @@ class Board:
         
         return self.grid[r][c].val
     
-
+    #returns the size of the grid
     def get_size(self):
         return self.size
     
+    #counts the number of white and black peices in the grid
     def count_pieces(self):
         '''
         counts the number of pieces for each player and stores in member O_num and X_num
@@ -89,6 +93,7 @@ class Board:
         self.W_num = W_num
         self.B_num = B_num
 
+    #returns the number of white and black pieces
     def get_piece_count(self):
         '''
         returns the a tuple containing the number of pieces for each player
