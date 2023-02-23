@@ -7,14 +7,18 @@ class othelloController:
         self.model =  othelloGame.othelloGame(size)
         self.view = othelloView.othelloView()
 
-    #move to game class?
     def play_game(self):
+        player_noMoves = False
         while True:
             self.view.display_board(self.model.board)
             valid_moves = self.model.get_valid_moves()
             print("Valid Moves: " + str(valid_moves))
             if len(valid_moves) == 0:
-                break
+                if player_noMoves:
+                    break
+                self.model.change_player()
+                player_noMoves = True
+                continue
             print(f"Player {self.model.get_curr_player()}'s turn")
             row, col = self.view.get_move()
             if (row, col) not in valid_moves:

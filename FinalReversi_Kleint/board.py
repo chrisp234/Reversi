@@ -40,7 +40,10 @@ class Board:
             for piece in row:
                 return_string += '|'
                 if(piece):
-                    return_string += f' {piece} '
+                    if(f' {piece} ' == ' _ '):
+                        return_string += '   '
+                    else:
+                        return_string += f' {piece} '
                 else:
                     return_string += '   '
             return_string += '|\n'

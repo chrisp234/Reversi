@@ -1,5 +1,6 @@
-# from enum import IntEnum
+from enum import Enum
 
-# class PlayerSymbol(IntEnum):
-#     W = 'W'
-#     B = 'B'
+class PlayerSymbol(Enum):
+    _ = 0
+    B = 1
+    W = 2

@@ -1,6 +1,4 @@
-
-
-symbols = [' ', 'B', 'W']
+import player_symbol
 
 class Cell:
     def __init__(self, val) -> None:
@@ -8,7 +6,7 @@ class Cell:
         if(val != 0 or val != 1 or val != 2):
             val = 0
         self.set_val(val)
-        self.symbol = ' '
+        self.symbol = " "
         self.set_symbol()
 
     def __str__(self):
@@ -25,7 +23,7 @@ class Cell:
         self.set_symbol()
 
     def set_symbol(self):
-        self.symbol = symbols[self.val]
+        self.symbol = str(player_symbol.PlayerSymbol(self.val).name)
 
     def flip_cell(self):
         if self.val == 1:
