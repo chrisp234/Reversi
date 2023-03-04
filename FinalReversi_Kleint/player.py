@@ -1,7 +1,11 @@
-from enum import IntEnum
+# make AI class
+# settings
 
-class Player(IntEnum):
-    B=1
-    W=2
+class Player:
+    def __init__(self, playerNum):
+        self.currPlayer = playerNum
+    def getPlayerNum(self):
+        return self.currPlayer
+
 
 
