@@ -11,10 +11,10 @@ class othelloController:
     #plays the game. No actual logic here
     def play_game(self):
         player_noMoves = False
-        self.view.display_board(self.model.board)
         gameType = input("Type 'local' for local game or 'cpu' for AI controlled opponent")
         if gameType == "local":
             while True:
+                self.view.display_board(self.model.board)
                 valid_moves = self.model.get_valid_moves()
                 print("Valid Moves: " + str(valid_moves))
                 #if no valid moves for player1-> check if player2 has moves and continue loop
@@ -31,14 +31,13 @@ class othelloController:
                     continue
                 self.model.make_move(row, col)
                 self.model.change_player()
-            
-                #find/displays winner
-                winner = self.model.get_winner()
-                self.view.display_board(self.model.board)
-                self.view.display_winner(winner)
-       elif gameType == "cpu":
-           break
-       else:
+            #find/displays winner
+            winner = self.model.get_winner()
+            self.view.display_board(self.model.board)
+            self.view.display_winner(winner)
+        elif gameType == "cpu":
+            exit
+        else:
            print("Not a valid option")
 
 
