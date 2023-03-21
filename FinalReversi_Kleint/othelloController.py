@@ -2,11 +2,13 @@ import othelloGame
 import othelloView
 import copy
 import numpy as np
+import settings
+
 
 class othelloController:
     #instantiates the model and view
-    def __init__(self, size):
-        self.model =  othelloGame.othelloGame(size)
+    def __init__(self, size, player):
+        self.model =  othelloGame.othelloGame(size, player)
         self.view = othelloView.othelloView()
 
     def minmax(self, model, depth, alpha=-np.inf, beta=np.inf):
@@ -99,6 +101,19 @@ class othelloController:
            print("Not a valid option")
 
 if __name__ == "__main__":
-    size = input("Please enter board size : ")
-    controller = othelloController(int(size))
+    othelloView.othelloView().login_screen()
+
+    #adjust settings
+    while True:
+        settings.Settings().read()
+        option = othelloView.othelloView().display_settings()
+        if option == "4":
+            break
+        else:
+            othelloView.othelloView().settings_options(option)
+            settings.Settings().save()
+
+    size = settings.Settings().get_size()
+    player = settings.Settings().get_player()
+    controller = othelloController(size, player)
     controller.play_game()
