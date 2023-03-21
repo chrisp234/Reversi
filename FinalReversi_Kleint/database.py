@@ -1,6 +1,7 @@
 from __future__ import division
 from getpass import getpass
 import psycopg2
+import textwrap
 
 class Database():
     def __init__(self):
@@ -18,14 +19,50 @@ class Database():
             pass
             
     def setup(self):
-        #run the set-up table stuff
+        setup_text = '''CREATE TABLE IF NOT EXISTS player (
+                        id int PRIMARY KEY, 
+                        username varchar(100) default NULL, 
+                        password varchar(100) default NULL, 
+                        ELO int 
+                        ); 
+
+                        CREATE TABLE IF NOT EXISTS game (
+                        gid int PRIMARY KEY,
+                        timestamp_start varchar(100),
+                        timestamp_end varchar(100),
+                        final_score int default NULL,
+                        winner_ID int,
+                        size_val int
+                        );
+
+                        CREATE TABLE IF NOT EXISTS player_game (
+                        playerID int REFERENCES player(id),
+                        gameID int REFERENCES game(gid),
+                        player_color varchar(100),
+                        PRIMARY KEY(playerID, gameID)
+                        );
+
+
+                        CREATE TABLE IF NOT EXISTS board_states (
+                        sid int PRIMARY KEY,
+                        gid int REFERENCES game(gid),
+                        move_num varchar(100),
+                        board_state varchar(1000),
+                        player_color_turn varchar(100)
+                        );'''
+        cursor = self.conn.cursor()
+        cursor.execute(setup_text)
         pass
 
 
     def verify_username_password(self, username, password):
+        print(username)
+        print(password)
+        verify_text="select player.username, player.password from player where player.username=%s and player.password=%s"
         cursor = self.conn.cursor()
-        #cursor.execute("select username, password from player where username==%s and password ==%s" (username, password))
-        if cursor.fetchall:
+        cursor.execute(verify_text, (username, password))
+        print(cursor.fetchall())
+        if cursor.rowcount != 0:
             return True
         else:
             return False
