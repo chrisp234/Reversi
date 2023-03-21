@@ -6,6 +6,7 @@ class othelloGame:
     #initializes board and player
     def __init__(self, size, playerNum):
         self.board = board.Board(size)
+        self.size = size
         self.def_player = player.Player(int(playerNum))
         self.curr_player = self.def_player.getPlayerNum()
         middle = int(np.round(size / 2))
