@@ -12,28 +12,27 @@ class othelloView:
         value = input("(1) Login, (2) Create Account, (3) Guest Login")
         if value == "1":
             try:
-                # self.database.execute()
-                # self.database.close()
-                username = input("Enter usernameeeee: ")
-                password = input("Enter passworddddddd:")
+                username = input("Enter username:")
+                password = input("Enter passwordd:")
                 if self.database.verify_username_password(username, password):
                     print('VALID INPUT. LOGGED IN')
+                    #return username
                 else:
                     raise TypeError('No existing username')
 
-                #return playerID?? variable in self?
+                #return playerID?? as global variable?
 
-
-                #verify if username exists
             except:
                 print("Invalid Login")
         if value == "2":
             try:
                 username = input("Enter desired username: ")
-                #verify its not taken
+                if self.database.verify_username(username):
+                    print('Valid Username!')
+                else:
+                    return 0
                 password = input("Enter password:")
-                #verify valid password
-                #self.database.insert_newPlayer()
+                self.database.insert_new_player()
             except:
                 print("Invalid Entry")
         if value == "3":
