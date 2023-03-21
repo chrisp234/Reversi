@@ -82,14 +82,23 @@ class Board:
         W_num = 0
         B_num = 0
 
+        board_state = []
+
         #loop through all cells and count the number of each player's piece
         for i in range(self.size):
             for j in range(self.size):
                 if(self.get_cell(i, j) == 2):
                     W_num += 1
+                    board_state.append(2)
                 elif(self.get_cell(i, j) == 1):
                     B_num += 1
+                    board_state.append(1)
+                #if empty it should be zero
+                elif(self.get_cell(i,j) == 0):
+                    board_state.append(1)
 
+        #send the string of 0,1,2s to the database after each move
+        
         self.W_num = W_num
         self.B_num = B_num
 
