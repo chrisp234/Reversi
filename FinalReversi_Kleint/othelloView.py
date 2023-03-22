@@ -9,6 +9,7 @@ class othelloView:
         print(board)
 
     def login_screen(self):
+        self.database.setup()
         value = input("(1) Login, (2) Create Account, (3) Guest Login")
         if value == "1":
             try:
@@ -20,7 +21,7 @@ class othelloView:
                 else:
                     raise TypeError('No existing username')
 
-                #return playerID?? as global variable?
+                return self.database.get_username(username)
 
             except:
                 print("Invalid Login")
@@ -32,11 +33,13 @@ class othelloView:
                 else:
                     return 0
                 password = input("Enter password:")
-                self.database.insert_new_player()
+                self.database.insert_new_player(username, password)
+                
+                return self.database.get_username(username)
             except:
                 print("Invalid Entry")
         if value == "3":
-            return 1
+            return "GuestUser"
 
     def display_settings(self):
         while True:
@@ -62,8 +65,6 @@ class othelloView:
         elif option == "4":
             return
             #quit
-
-
 
     def get_move(self):
         while True:

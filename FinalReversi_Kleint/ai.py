@@ -44,26 +44,26 @@ class AI:
     
     def cpu_play(self, model, view):
         while True:
-                self.view.display_board(self.model.board)
-                valid_moves = self.model.get_valid_moves()
-                print("Valid Moves: " + str(valid_moves))
-                if len(valid_moves) == 0:
-                    self.model.change_player()
-                    valid_moves = self.model.get_valid_moves()
-                if len(valid_moves) == 0:
-                    break
-                if self.model.get_curr_player() == 1:
-                    print(f"Player {self.model.get_curr_player()}'s turn")
-                    row, col = self.view.get_move()
-                    if (row, col) not in valid_moves:
-                        print("Invalid move")
-                        continue
-                    self.model.make_move(row, col)
-                else:
-                    print(f"CPU's turn")
-                    row, col = self.minmax(self.model, 3)
-                    self.model.make_move(row, col)
+            self.view.display_board(self.model.board)
+            valid_moves = self.model.get_valid_moves()
+            print("Valid Moves: " + str(valid_moves))
+            if len(valid_moves) == 0:
                 self.model.change_player()
-                winner = self.model.get_winner()
-                self.view.display_board(self.model.board)
-                self.view.display_winner(winner)
+                valid_moves = self.model.get_valid_moves()
+            if len(valid_moves) == 0:
+                break
+            if self.model.get_curr_player() == 1:
+                print(f"Player {self.model.get_curr_player()}'s turn")
+                row, col = self.view.get_move()
+                if (row, col) not in valid_moves:
+                    print("Invalid move")
+                    continue
+                self.model.make_move(row, col)
+            else:
+                print(f"CPU's turn")
+                row, col = self.minmax(self.model, 3)
+                self.model.make_move(row, col)
+            self.model.change_player()
+        winner = self.model.get_winner()
+        self.view.display_board(self.model.board)
+        self.view.display_winner(winner)

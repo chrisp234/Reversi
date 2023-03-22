@@ -4,11 +4,10 @@ import player
 
 class othelloGame:
     #initializes board and player
-    def __init__(self, size, playerNum):
+    def __init__(self, size, clr):
         self.board = board.Board(size)
         self.size = size
-        self.def_player = player.Player(int(playerNum))
-        self.curr_player = self.def_player.getPlayerNum()
+        self.curr_player = int(clr)
         middle = int(np.round(size / 2))
         self.board.set_cell(middle - 1, middle - 1, 2)
         self.board.set_cell(middle, middle, 2)
@@ -70,6 +69,7 @@ class othelloGame:
     
     #function involved in making a move and flipping necessary pieces
     def make_move(self, row, col):
+        
         if not self.is_valid_move(self.curr_player, row, col):
             raise ValueError("Invalid move")
         if self.board.set_cell(row, col, self.curr_player) == -1:
