@@ -2,6 +2,7 @@ import othelloGame
 import othelloView
 import copy
 import numpy as np
+import settings
 
 class AI:
     def __init__(self, size, player):
@@ -61,8 +62,15 @@ class AI:
                 self.model.make_move(row, col)
             else:
                 print(f"CPU's turn")
-                row, col = self.minmax(self.model, 3)
+                difficulty = settings.Settings().get_difficulty()
+                if(difficulty == "easy"):
+                    row, col = self.minmax(self.model, 1)
+                elif(difficulty == "medium"):
+                    row, col = self.minmax(self.model, 3)
+                elif(difficulty == "hard"):
+                    row, col = self.minmax(self.model, 6)
                 self.model.make_move(row, col)
+                
             self.model.change_player()
         winner = self.model.get_winner()
         self.view.display_board(self.model.board)

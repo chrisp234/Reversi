@@ -78,3 +78,9 @@ class Settings:
             return "2"
         else:
             return "1"
+        
+    def get_difficulty(self):
+        with open("settings.json", "r") as jsonfile:
+            data = json.load(jsonfile) # Reading the file
+            jsonfile.close()
+        return data['CPU difficulty']
