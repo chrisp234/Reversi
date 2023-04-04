@@ -6,6 +6,7 @@ import json
 import time
 import database_data
 
+
 class Database():
     def __init__(self):
         try:
@@ -14,7 +15,7 @@ class Database():
                 host='localhost',
                 user='postgres',
                 password='postgres',
-                port = 5432
+                port=5432
             )
 
             self.cursor = self.conn.cursor()
@@ -54,7 +55,6 @@ class Database():
         self.cursor.execute(setup_text)
         self.conn.commit()
 
-
     def verify_username_password(self, username, password):
         verify_text = "SELECT player.username, player.password FROM player WHERE player.username=%s AND player.password=%s"
         self.cursor.execute(verify_text, (username, password))
@@ -64,13 +64,11 @@ class Database():
             return True
         else:
             return False
-        
+
     def verify_username(self, username):
         verify_text = "SELECT player.username FROM player WHERE username=%s"
-        print("srdfyghjkl")
         self.cursor.execute(verify_text, (username,))
-        print('hi')
-        #if there isn't 1 row, the username doesnt exist. it is valid
+
         if self.cursor.rowcount != 1:
             return True
         else:
@@ -84,19 +82,15 @@ class Database():
     def get_username(self, username):
         verify_text = "SELECT player.username FROM player WHERE player.username=%s"
         self.cursor.execute(verify_text, (username,))
-        result = self.cursor.fetchone()  # fetch a single row
+        result = self.cursor.fetchone()
+
         if result is not None:
-            return result[0]  # return the first column of the row as a string
+            return result[0]
         else:
-            return None  # or return None if the result set is empty
+            return None
 
     def update_elo(self, player_id, new_elo):
         update_text = "UPDATE player SET elo = %s WHERE id = %s;"
-        self.cursor.execute(update_text, (new_elo, player_id))
-        self.conn.commit()
-
-    def write_size(self):
-        update_text = "UPDATE game SET elo = %s WHERE id = %s;"
         self.cursor.execute(update_text, (new_elo, player_id))
         self.conn.commit()
 
@@ -119,14 +113,47 @@ class Database():
 
     def elo(self, old_score, expected, actual_score, k_factor):
         return old_score + k_factor * (actual_score - expected)
-    
+
     def create_game_table(self, size):
-        update_text = "INSERT INTO game (size_val) VALUES (%s);"
-        self.cursor.execute(update_text, (size,))
-        self.conn.commit()
+    update_text = "INSERT INTO game (size_val) VALUES (%s);"
+    self.cursor.execute(update_text, (size,))
+    self.conn.commit()
 
-    def update_game_table(self):
-        pass
 
-    def create_board_table(self):
-        pass
+def update_game_table(self):
+    pass
+
+
+def create_board_table(self):
+    pass
+# Change 1: Added the LoggingDatabaseDecorator class.
+
+
+class LoggingDatabaseDecorator:
+    # Change 2: Added the __init__ method to accept a Database object.
+    def __init__(self, database):
+        self._database = database
+
+    # Change 3: Implemented the __getattr__ method to add logging to the methods.
+    def __getattr__(self, name):
+        if callable(getattr(self._database, name)):
+            # Change 4: Wrapped the method with logging functionality.
+            def wrapper(*args, **kwargs):
+                print(f"Executing {name} method...")
+                result = getattr(self._database, name)(*args, **kwargs)
+                print(f"Method {name} executed.")
+                return result
+
+            return wrapper
+        else:
+            return getattr(self._database, name)
+
+
+# Change 5: Added a __main__ block to demonstrate the usage of LoggingDatabaseDecorator.
+if __name__ == "__main__":
+    db = Database()
+    logging_db = LoggingDatabaseDecorator(db)
+
+    logging_db.setup()
+    logging_db.insert_new_player("john", "password123")
+    logging_db.close()
