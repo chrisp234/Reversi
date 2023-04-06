@@ -50,18 +50,19 @@ class othelloView:
                 print("Invalid input")
 
     def settings_options(self, option):
+        stgs = settings.Settings()
         if option == "1":
             size = input("What size?\n")
-            settings.Settings.update_size(settings.Settings.getself, size)
-            settings.Settings.save(settings.Settings.getself)
+            stgs.update_size(size)
+            stgs.save()
         elif option == "2":
             color = input("What color?\n")
-            settings.Settings.update_color(settings.Settings.getself, color)
-            settings.Settings.save(settings.Settings.getself)
+            stgs.update_color(color)
+            stgs.save()
         elif option == "3":
             CPU = input("What difficulty?\n")
-            settings.Settings.update_CPU(settings.Settings.getself, CPU)
-            settings.Settings.save(settings.Settings.getself)
+            stgs.update_CPU(CPU)
+            stgs.save()
         elif option == "4":
             return
             #quit

@@ -51,8 +51,8 @@ class Database():
                         board_state VARCHAR(1000),
                         player_color_turn VARCHAR(100)
                         );'''
-        #self.cursor.execute(setup_text)
-        #self.conn.commit()
+        self.cursor.execute(setup_text)
+        self.conn.commit()
 
 
     def verify_username_password(self, username, password):

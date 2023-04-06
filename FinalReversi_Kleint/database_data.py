@@ -12,7 +12,6 @@ class game_data:
         self.black_score = 0
 
 
-
 class board_state_moves_data:
     def __init__(self):
         self.ID = None

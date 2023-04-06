@@ -2,6 +2,8 @@ import json
 import time
 
 class Settings:
+    _instance = None
+    
     def __init__(self):
         article_info = {
             "size" : "8",
@@ -10,6 +12,11 @@ class Settings:
         }
         self.myJSON = json.dumps(article_info)
 
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    
     def getself(self):
         return self
 

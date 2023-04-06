@@ -1,7 +1,6 @@
 import numpy as np
 import board
 import player
-import copy
 
 class othelloGame:
     #initializes board and player
@@ -117,7 +116,4 @@ class othelloGame:
         else:
             return -1
         
-    #returns a copy of the game state, which is used by the AI class to calculate moves
-    def clone(self):
-        return copy.deepcopy(self)
     
