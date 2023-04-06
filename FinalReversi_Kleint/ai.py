@@ -18,7 +18,7 @@ class AI:
             best_score = np.inf
             best_move = None
             for move in valid_moves:
-                model_copy = clone(self.model)
+                model_copy = self.model.clone()
                 model_copy.make_move(move[0], move[1])
                 _, score = self.minmax(model_copy, depth-1, alpha, beta)
                 if score < best_score:
@@ -31,7 +31,7 @@ class AI:
             best_score = -np.inf
             best_move = None
             for move in valid_moves:
-                model_copy = clone(self.model)
+                model_copy = self.model.clone()
                 model_copy.make_move(move[0], move[1])
                 _, score = self.minmax(model_copy, depth-1, alpha, beta)
                 if score > best_score:
