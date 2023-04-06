@@ -1,0 +1,381 @@
+<html>
+    <script>
+        var blackBackground;
+        var canMoveLayer;
+        gap = 3;
+        cellWidth = 65;
+        var discLayer;
+        var turn = 1;
+        var scoreLabel;
+        var gameOver = false;
+
+        var discs = [
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,2,1,0,0,0],
+        [0,0,0,1,2,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0]
+        ]
+
+        window.onload=function()
+        {
+            scoreLabel = document.getElementById("score");
+            canMoveLayer = document.getElementById("canMoveLayer");
+            blackBackground = document.getElementById("blackBackground");
+            discLayer = document.getElementById("discLayer");
+            blackBackground.style.width = cellWidth * 8 + (gap * 9);
+            blackBackground.style.height = cellWidth * 8 + (gap * 9);
+            drawGreenSquares();
+            drawDiscs();
+            drawCanMoveLayer();
+            redrawScore();
+        }
+
+        
+
+        function drawGreenSquares() 
+        {
+            for (var r = 0; r < 8; r++) {
+            for(var c = 0; c < 8; c++) {
+             var greenSquare = document.createElement("div");
+                greenSquare.style.position = "absolute";
+                greenSquare.style.width = cellWidth;
+                greenSquare.style.height = cellWidth;
+                greenSquare.style.backgroundColor = "green";
+                greenSquare.style.left = (cellWidth+gap) * c + gap;
+                greenSquare.style.top = (cellWidth+gap) * r + gap;
+                greenSquare.setAttribute("onclick", "clickedSquare("+r+","+c+")")
+                blackBackground.appendChild(greenSquare);
+              }
+           }
+
+        }
+
+        function canMove(id) 
+        {
+            for (var r = 0; r < 8; r++) 
+            {
+               for(var c = 0; c < 8; c++) 
+               {
+                   if(canClickSpot(id, r, c)) {
+                    return true;
+                   }
+               }
+           }
+           return false;
+        }
+        function clickedSquare(r,c) 
+        {
+          if (gameOver) return;
+
+          if(discs[r][c] != 0) {
+            return;
+          }
+
+          if (canClickSpot(turn, r, c) == true)
+          {
+            var affectedDiscs = getAffectedDiscs(turn, r, c);
+            flipDiscs(affectedDiscs);
+            discs[r][c] = turn;
+            if(turn == 1 && canMove(2)) turn = 2;
+            else if (turn == 2 && canMove(1)) turn = 1;
+            if(canMove(1) == false && canMove(2) == false )
+            {
+                alert("Game Over");
+                gameOver = true;
+            }
+            drawDiscs();
+            drawCanMoveLayer();
+            redrawScore();
+          }
+        }
+        
+
+
+        function redrawScore() {
+            var ones = 0;
+            var twos = 0;
+            for (var r = 0; r < 8; r++) 
+            {
+               for(var c = 0; c < 8; c++) 
+               {
+                   var value = discs[r][c];
+                   if(value == 1) ones += 1;
+                   else if (value ==  2) twos += 1;
+               }
+           }
+           scoreLabel.innerHTML = "Black: " + ones + " White: " + twos;
+        }
+
+        function canClickSpot(id, r, c)
+        {
+           var affectedDiscs = getAffectedDiscs(id, r,c);
+           if (affectedDiscs.length == 0) return false;
+           else return true;
+
+        }
+
+        function getAffectedDiscs(id, r, c) {
+            var affectedDiscs = [];
+            var couldBeAffected = [];
+            
+            var cIterator = c;
+            while(cIterator < 7) {
+                cIterator += 1;
+                var valueAtSpot = discs[r][cIterator];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:r, c:cIterator};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            var couldBeAffected = [];
+            var cIterator = c;
+            while(cIterator > 0) {
+                cIterator -= 1;
+                var valueAtSpot = discs[r][cIterator];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:r, c:cIterator};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            var couldBeAffected = [];
+            var rIterator = r;
+            while(rIterator > 0) {
+                rIterator -= 1;
+                var valueAtSpot = discs[rIterator][c];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:rIterator, c:c};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            var couldBeAffected = [];
+            var rIterator = r;
+            while(rIterator < 7) {
+                rIterator += 1;
+                var valueAtSpot = discs[rIterator][c];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:rIterator, c:c};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            var couldBeAffected = [];
+            var rIterator = r;
+            var cIterator = c;
+            while(rIterator < 7 && cIterator < 7) {
+                rIterator += 1;
+                cIterator += 1;
+                var valueAtSpot = discs[rIterator][cIterator];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:rIterator, c:cIterator};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            var couldBeAffected = [];
+            var rIterator = r;
+            var cIterator = c;
+            while(rIterator < 7 && cIterator > 0) {
+                rIterator += 1;
+                cIterator -= 1;
+                var valueAtSpot = discs[rIterator][cIterator];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:rIterator, c:cIterator};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            var couldBeAffected = [];
+            var rIterator = r;
+            var cIterator = c;
+            while(rIterator > 0 && cIterator > 0) {
+                rIterator -= 1;
+                cIterator -= 1;
+                var valueAtSpot = discs[rIterator][cIterator];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:rIterator, c:cIterator};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            var couldBeAffected = [];
+            var rIterator = r;
+            var cIterator = c;
+            while(rIterator < 7 && cIterator < 7) {
+                rIterator += 1;
+                cIterator += 1;
+                var valueAtSpot = discs[rIterator][cIterator];
+                if(valueAtSpot == 0 || valueAtSpot == id) 
+                {
+                    if (valueAtSpot == id) {
+                        affectedDiscs = affectedDiscs.concat(couldBeAffected);
+                    }
+                    break;
+                }
+                else 
+                {
+                    var discLocation = {r:rIterator, c:cIterator};
+                    couldBeAffected.push(discLocation);
+                }
+            }
+
+            return affectedDiscs;
+        }
+
+        function flipDiscs(affectedDiscs)
+        {
+            for(var i = 0; i < affectedDiscs.length; i++)
+            {
+                var spot = affectedDiscs[i];
+                if(discs[spot.r][spot.c] == 1)
+                {
+                    discs[spot.r][spot.c] = 2;
+                }
+                else 
+                {
+                    discs[spot.r][spot.c] = 1;
+                }
+            }
+        }
+
+
+        function drawDiscs() 
+        {
+            discLayer.innerHTML = "";
+            for (var r = 0; r < 8; r++) 
+            {
+               for(var c = 0; c < 8; c++) 
+               {
+                   var value = discs[r][c];
+                   if(value == 0) {
+
+                   } 
+                   else {
+                        var disc = document.createElement("div");
+                        disc.style.position = "absolute";
+                        disc.style.width = cellWidth - 4;
+                        disc.style.height = cellWidth - 4;
+                        disc.style.borderRadius = "50%";
+                        disc.style.left = (cellWidth+gap)*c + (gap + 10);
+                        disc.style.top = (cellWidth+gap)*r + (gap+ 10);
+                    
+                        if(value == 1) {
+                            //disc.style.backgroundColor = "black";
+                            disc.style.backgroundImage = "radial-gradient(#333333 30%, black 70%)";
+
+                        }
+                        if(value == 2) {
+                            //disc.style.backgroundColor = "white";
+                            disc.style.backgroundImage = "radial-gradient(white 30%, #cccccc 70%)";
+                        }
+
+                        discLayer.appendChild(disc);
+                    }
+               }
+           }
+        }
+
+        function drawCanMoveLayer() 
+        {
+            canMoveLayer.innerHTML = "";
+            for (var r = 0; r < 8; r++) 
+            {
+               for(var c = 0; c < 8; c++) 
+               {
+                   var value = discs[r][c];
+                   if(value == 0 && canClickSpot(turn, r, c)) {
+                        var discOutline = document.createElement("div");
+                        discOutline.style.position = "absolute";
+                        discOutline.style.width = cellWidth - 4;
+                        discOutline.style.height = cellWidth - 4;
+                        discOutline.style.borderRadius = "50%";
+                        discOutline.style.left = (cellWidth+gap)*c + (gap + 10);
+                        discOutline.style.top = (cellWidth+gap)*r + (gap+ 10);
+                        discOutline.style.zIndex = 2;
+                        discOutline.setAttribute("onclick", "clickedSquare("+r+","+c+")")
+
+                    
+                        if(turn == 1) {
+                            
+                            discOutline.style.border = "2px solid black";
+                        }
+                        if(turn == 2) {
+                            discOutline.style.border = "2px solid black";
+
+                            
+                        }
+                           canMoveLayer.appendChild(discOutline);
+                   } 
+               }
+           }
+        }
+    </script>
+    <div id = "blackBackground" style="position:absolute; left: 0 top: 0; 
+    background-color: black; height: 500; width: 500;"> </div>
+    <div id = "discLayer"></div>
+    <div id = "canMoveLayer"></div>
+    <div id="score" style="position:absolute; left: 0; top:550; width: 600; font-size: 48; background-color:black; color: white; 
+    text-align: center">Black: 2 White: 2</div>
+</html>

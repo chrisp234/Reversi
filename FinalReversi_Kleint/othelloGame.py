@@ -117,7 +117,7 @@ class othelloGame:
         else:
             return -1
         
-    #returns a copy of the game state, which can be used by the AI class to calculate moves
+    #returns a copy of the game state, which is used by the AI class to calculate moves
     def clone(self):
         return copy.deepcopy(self)
     

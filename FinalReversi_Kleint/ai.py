@@ -18,6 +18,7 @@ class AI:
             best_score = np.inf
             best_move = None
             for move in valid_moves:
+                #Added prototype design pattern to user superclass function to create copy
                 model_copy = self.model.clone()
                 model_copy.make_move(move[0], move[1])
                 _, score = self.minmax(model_copy, depth-1, alpha, beta)
@@ -31,6 +32,7 @@ class AI:
             best_score = -np.inf
             best_move = None
             for move in valid_moves:
+                #Added prototype design pattern to user superclass function to create copy
                 model_copy = self.model.clone()
                 model_copy.make_move(move[0], move[1])
                 _, score = self.minmax(model_copy, depth-1, alpha, beta)
