@@ -1,6 +1,7 @@
 import numpy as np
 import board
 import player
+import copy
 
 class othelloGame:
     #initializes board and player
@@ -116,4 +117,6 @@ class othelloGame:
         else:
             return -1
         
+    def clone(self):
+        return copy.deepcopy(self)
     

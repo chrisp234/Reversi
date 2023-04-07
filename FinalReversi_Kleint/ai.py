@@ -1,10 +1,11 @@
-import copy
 import numpy as np
 import superPlayer
+import prototype
 
 class AI(superPlayer.SuperPlayer):
     def __init__(self, name, difficulty):
         superPlayer.SuperPlayer.__init__(self, name)
+        self.prototype = prototype.Prototype()
         self.difficulty = difficulty
         if(self.difficulty == "easy"):
             self.depth = 1
@@ -25,7 +26,7 @@ class AI(superPlayer.SuperPlayer):
             best_score = np.inf
             best_move = None
             for move in valid_moves:
-                model_copy = copy.deepcopy(self.model)
+                model_copy = self.prototype.complete_copy(self.model)
                 model_copy.make_move(move[0], move[1])
                 _, score = self.minmax(model_copy, depth-1, alpha, beta)
                 if score < best_score:
@@ -38,7 +39,7 @@ class AI(superPlayer.SuperPlayer):
             best_score = -np.inf
             best_move = None
             for move in valid_moves:
-                model_copy = copy.deepcopy(self.model)
+                model_copy = self.prototype.complete_copy(self.model)
                 model_copy.make_move(move[0], move[1])
                 _, score = self.minmax(model_copy, depth-1, alpha, beta)
                 if score > best_score:
