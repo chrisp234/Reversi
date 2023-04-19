@@ -1,5 +1,5 @@
-from http.client import HTTPException
-from fastapi import FastAPI, Response, Request
+
+from fastapi import FastAPI, Response, Request, HTTPException
 from dtos.user import UserCredentials
 import database
 import uuid
@@ -37,7 +37,7 @@ async def login(credentials: UserCredentials, response: Response):
         response.set_cookie(key="reversi_session_token", value=sessionToken)
         return {"message": "Come to the dark side, we have cookies"}
     else:
-        raise HTTPException(401, detail="Unauthorized")
+        raise HTTPException(status_code=401)
 
 @app.post("/api/v1/logout")
 async def logout(request: Request):
@@ -57,6 +57,23 @@ async def online_players():
         username.append(db.get_username_from_playerID(i))
     return username
     
+@app.post("/api/v1/games")
+async def start_game():
+    pass
 
-    
+@app.post("/api/v1/games/:id/move")
+async def make_move():
+    pass
 
+@app.get("/api/v1/games/:id")
+async def get_game():
+    pass
+
+@app.get("/api/v1/me")
+async def me(request: Request):
+    token = request.cookies.get('reversi_session_token')
+    try:
+        userId = db.get_user_id_from_session(token)
+        return userId[0]
+    except:
+        raise HTTPException(status_code=401)

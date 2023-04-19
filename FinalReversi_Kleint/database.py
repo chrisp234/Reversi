@@ -169,4 +169,7 @@ class Database():
         self.cursor.execute(select_text, ID)
         return self.cursor.fetchone()
 
-    
+    def get_user_id_from_session(self, token):
+        select_text = f'SELECT playerID from sessions WHERE active_session_token=\'{token}\';'
+        self.cursor.execute(select_text)
+        return self.cursor.fetchone()
