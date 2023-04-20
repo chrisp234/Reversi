@@ -1,6 +1,6 @@
 
 from fastapi import FastAPI, Response, Request, HTTPException
-from dtos.user import UserCredentials
+from dtos.user import UserCredentials, RecipientPerson
 import database
 import uuid
 
@@ -8,9 +8,14 @@ app = FastAPI()
 db = database.Database()
 db.setup()
 
-@app.get("/api/v1/health")
-async def health_check():
-    return {"message": "Healthy"}
+def get_user_id_from_request(request: Request):
+    token = request.cookies.get('reversi_session_token')
+    try:
+        userId = db.get_user_id_from_session(token)
+        return userId[0]
+    except:
+        raise HTTPException(status_code=401)
+
 
 @app.post("/api/v1/register")
 async def register(user: UserCredentials): 
@@ -57,6 +62,45 @@ async def online_players():
         username.append(db.get_username_from_playerID(i))
     return username
     
+@app.post("/api/v1/invitations")
+async def post_invitations(otherguy: RecipientPerson, request: Request):
+    print(otherguy.username)
+    other_guy_id = db.get_player_id_by_username(otherguy.username)
+    db.create_invitation(get_user_id_from_request(request), other_guy_id, "pending")
+    #send, receive ID, status
+
+@app.get("/api/v1/invitations")
+async def get_invitations(request: Request):
+    userId = get_user_id_from_request(request)
+    i=[]
+    invites = db.get_user_invites(userId)
+    for invite in invites: 
+        # print(invite)
+        senderName = db.get_username_from_playerID([invite[1]])
+        recipientName = db.get_username_from_playerID([invite[2]])
+
+        i.append({'inviteId': invite[0], 'sender': senderName, 'senderId': invite[1], 'recipient': recipientName, 'recipientId': invite[2], 'status': invite[3]})
+    return i    
+    # return invites
+
+@app.post("/api/v1/invitations/{id}/accept")
+async def accept_invite(id, request: Request):
+    userId = get_user_id_from_request(request)
+    # You should only be able to accept an invite 
+    # if you are the user it was sent to
+    if userId in db.get_recipient_ID_from_invitation(id):
+        db.update_invitation_status(id, "accepted")
+    else:
+        raise HTTPException(status_code=403)
+    
+@app.post("/api/v1/invitations/{id}/decline")
+async def decline_invite(id, request: Request):
+    userId = get_user_id_from_request(request)
+    if userId in db.get_recipient_ID_from_invitation(id):
+        db.update_invitation_status(id, "decline")
+    else:
+        raise HTTPException(status_code=403)
+
 @app.post("/api/v1/games")
 async def start_game():
     pass
@@ -71,9 +115,4 @@ async def get_game():
 
 @app.get("/api/v1/me")
 async def me(request: Request):
-    token = request.cookies.get('reversi_session_token')
-    try:
-        userId = db.get_user_id_from_session(token)
-        return userId[0]
-    except:
-        raise HTTPException(status_code=401)
+    return get_user_id_from_request(request)
