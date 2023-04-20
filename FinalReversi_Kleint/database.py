@@ -50,6 +50,13 @@ class Database():
                         active_session_token VARCHAR(256)
                         );
 
+                        CREATE TABLE IF NOT EXISTS invitations (
+                        inviteID SERIAL PRIMARY KEY,
+                        senderID INT REFERENCES player(id),
+                        recipientID INT REFERENCES player(id),
+                        status VARCHAR(100)
+                        );
+
                         CREATE TABLE IF NOT EXISTS board_states (
                         sid SERIAL PRIMARY KEY,
                         gid INT REFERENCES game(gid),
@@ -123,6 +130,11 @@ class Database():
         self.cursor.execute(select_text, (username,))
         return self.cursor.fetchone()
     
+    def get_player_id_by_username(self, username):
+        select_text = "SELECT id FROM player WHERE username = %s;"
+        self.cursor.execute(select_text, (username,))
+        return self.cursor.fetchone()
+    
     def close(self):
         self.cursor.close()
         self.conn.close()
@@ -173,3 +185,26 @@ class Database():
         select_text = f'SELECT playerID from sessions WHERE active_session_token=\'{token}\';'
         self.cursor.execute(select_text)
         return self.cursor.fetchone()
+    
+    def create_invitation(self, senderId, recipientID, status):
+        insert_text = "INSERT INTO invitations (senderId, recipientId, status) VALUES (%s, %s, %s);"
+        self.cursor.execute(insert_text, (senderId, recipientID, status))
+        self.conn.commit()
+
+    def get_user_invites(self, playerID):
+        insert_text = "SELECT * FROM invitations WHERE senderID=%s OR recipientID=%s;"
+        self.cursor.execute(insert_text, (playerID, playerID))
+        return self.cursor.fetchall()
+    
+    def update_invitation_status(self, inviteID, status):
+        insert_text = "UPDATE invitations SET status = %s WHERE inviteID = %s;"
+        self.cursor.execute(insert_text, (status, inviteID))
+        self.conn.commit()
+
+    def get_recipient_ID_from_invitation(self, inviteID):
+        insert_text = "SELECT recipientID FROM invitations WHERE inviteID=%s;"
+        self.cursor.execute(insert_text, (inviteID))
+        return self.cursor.fetchone()
+
+    
+    

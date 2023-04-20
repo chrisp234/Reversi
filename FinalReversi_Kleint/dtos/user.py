@@ -5,3 +5,6 @@ class UserCredentials(BaseModel):
     username: str
     password: str
 
+class RecipientPerson(BaseModel):
+    username: str
+

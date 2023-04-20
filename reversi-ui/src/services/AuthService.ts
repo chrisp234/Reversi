@@ -33,3 +33,8 @@ export const checkIsLoggedIn = async(): Promise<boolean> => {
     }
     return false
 }
+
+export const getUserId = async(): Promise<number> => {
+    const response = await fetch('/api/v1/me')
+    return await response.json()
+}
