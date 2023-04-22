@@ -1,4 +1,3 @@
-
 export const login = async(username: string, password: string) => {
     const response = await fetch('/api/v1/login',{
         method: 'POST',   

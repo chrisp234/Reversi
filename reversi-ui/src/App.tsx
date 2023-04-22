@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { LandingPage } from './pages/LandingPage/LandingPage';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './common/theme';
+import { GamePage } from './pages/GamePage/GamePage';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <Routes>
       <Route index element={<LandingPage/>} />
         <Route element={<LoginPage />} path='/login' />
+        <Route element={<GamePage />} path='/game' />
       </Routes>
 
       </BrowserRouter>

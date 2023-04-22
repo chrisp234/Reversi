@@ -2,6 +2,7 @@ import { AppBar, Toolbar, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { checkIsLoggedIn, getUserId, logout } from '../../services/AuthService';
 import { acceptInvitation, declineInvitation, getInvitations } from '../../services/InvitationService';
+import { useCurrentUser } from '../../stores/CurrentUserStore';
 import { AboutReversi } from './AboutReversi';
 import { Leaderboard } from './Leaderboard';
 import { StartGameCard } from './StartGameCard';
@@ -9,6 +10,7 @@ import { StartGameCard } from './StartGameCard';
 export const LandingPage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>()
     const [userId, setUserId] = useState<number>()
+    const {currentUser, updateCurrentUser} = useCurrentUser(state => state)
 
     const onLoginChangeClick = async() => {
         if(isLoggedIn){
@@ -40,6 +42,7 @@ export const LandingPage = () => {
  
     const fetchUserId = async () => {
         const uId = await getUserId()
+        updateCurrentUser(uId, undefined)
         setUserId(uId)
     }
 
@@ -63,7 +66,7 @@ export const LandingPage = () => {
                 >
                     Reversi
                 </Typography>
-                <div onClick={onLoginChangeClick}>{isLoggedIn ? <Typography>Logout</Typography> : <Typography>LogIn</Typography>}</div>
+                <div onClick={onLoginChangeClick}>{isLoggedIn ? <Typography>Logout</Typography> : <Typography>Log In</Typography>}</div>
             </Toolbar>
         </AppBar>
         <div style={{display: 'flex', marginTop: '104px'}}>
