@@ -1,0 +1,4 @@
+numpy==1.24.2
+psycopg2==2.9.6
+fastapi==0.95.1
+uvicorn==0.21.1
