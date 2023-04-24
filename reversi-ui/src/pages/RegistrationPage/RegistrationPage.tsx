@@ -1,6 +1,6 @@
 import { Alert, Button, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
-import { login, register } from '../../services/AuthService';
+import { login, loginAsGuest, register } from '../../services/AuthService';
 
 export const RegistrationPage = () => {
     const [password, setPassword] = useState<string>()
@@ -16,6 +16,11 @@ export const RegistrationPage = () => {
         } catch (e) {
             setError("Registration failed; Please try again")
         }
+    }
+    
+    const onContinueAsGuestClicked = async() => {
+        await loginAsGuest()
+        window.location.assign('/')
     }
 
     return (
@@ -54,7 +59,7 @@ export const RegistrationPage = () => {
                 <Typography>Have an account?</Typography>
                 <div>
                     <Button onClick={()=> window.location.assign('/login')}>Login</Button>
-                    <Button>Continue as guest</Button>
+                    <Button onClick={onContinueAsGuestClicked}>Continue as guest</Button>
                 </div>
             </div>
         </div>

@@ -28,15 +28,15 @@ interface INewGameModalProps {
 const NewGameModal = ({ gameMode, onClose }: INewGameModalProps) => {
   const [onlinePlayers, setOnlinePlayers] = useState<any>([]);
   const [opponent, setOpponent] = useState<string>();
-  const [boardSize, setBoardSize] = useState<string>('8');
-  const [color, setColor] = useState<string>('white')
-  const otherColor = color === 'white' ? 'black' : 'white';
-  const { currentUser } = useCurrentUser()
+  const [boardSize, setBoardSize] = useState<string>("8");
+  const [color, setColor] = useState<string>("white");
+  const otherColor = color === "white" ? "black" : "white";
+  const { currentUser } = useCurrentUser();
 
   const loadOnlinePlayers = async () => {
-    console.log(currentUser)
+    console.log(currentUser);
     const foo = await fetchOnlinePlayers();
-    setOnlinePlayers(foo.filter((player) => player!==currentUser.username));
+    setOnlinePlayers(foo.filter((player) => player !== currentUser.username));
   };
 
   useEffect(() => {
@@ -71,14 +71,20 @@ const NewGameModal = ({ gameMode, onClose }: INewGameModalProps) => {
 
   const onSubmit = async () => {
     if (gameMode === "online") {
-      await createInvitation(opponent!, { boardSize, players: [{
-        color, username: currentUser.username
-      },
-    {color: otherColor, username: opponent}] });
+      await createInvitation(opponent!, {
+        boardSize,
+        players: [
+          {
+            color,
+            username: currentUser.username,
+          },
+          { color: otherColor, username: opponent },
+        ],
+      });
     }
     if (gameMode === "local") {
-        const game = await createGame('local', { boardSize })
-        window.location.assign(`/game/${game.id}`)
+      const game = await createGame("local", { boardSize });
+      window.location.assign(`/game/${game.id}`);
     }
   };
 
@@ -98,21 +104,25 @@ const NewGameModal = ({ gameMode, onClose }: INewGameModalProps) => {
           helperText="How many rows/columns the board should contain"
           fullWidth
         />
-        <TextField
-          sx={{ marginBottom: "32px" }}
-          fullWidth
-          variant="filled"
-          label="Color"
-          defaultValue="white"
-          onChange={(e) => {setColor(e.target.value)}}
-          select
-        >
-          {colorOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+        {gameMode !== "local" && (
+          <TextField
+            sx={{ marginBottom: "32px" }}
+            fullWidth
+            variant="filled"
+            label="Color"
+            defaultValue="white"
+            onChange={(e) => {
+              setColor(e.target.value);
+            }}
+            select
+          >
+            {colorOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
         {gameMode === "ai" && (
           <TextField fullWidth variant="filled" label="Difficulty" select>
             {difficultyOptions.map((option) => (

@@ -48,6 +48,7 @@ export const GamePage = () => {
                         variant="h6" 
                         component="div" 
                         sx={{flexGrow: 1}}
+                        onClick={()=>{window.location.assign('/')}}
                     >
                         Reversi
                     </Typography>
@@ -61,6 +62,7 @@ export const GamePage = () => {
             }
             <ReversiBoard state={gameState}/>
             <div style={{marginTop: '32px'}}>
+                <Typography variant="body1">Current Turn: {gameState.whose_turn}</Typography>
                 <Typography variant="h5">Score:</Typography>
                 {gameState.settings.players.map((player: any) => (<Typography>{player.username} ({player.color}): {(scores as any)[player.color]}</Typography>))}
             </div>

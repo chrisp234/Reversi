@@ -1,4 +1,5 @@
 import { AppBar, Toolbar, Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles';
 import React, { useEffect, useState } from 'react'
 import { checkIsLoggedIn, getUserId, logout } from '../../services/AuthService';
 import { acceptInvitation, declineInvitation, getInvitations } from '../../services/InvitationService';
@@ -7,10 +8,19 @@ import { AboutReversi } from './AboutReversi';
 import { Leaderboard } from './Leaderboard';
 import { StartGameCard } from './StartGameCard';
 
+const useStyles = makeStyles({
+    logoutButton: {
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    }
+})
+
 export const LandingPage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>()
     const [userId, setUserId] = useState<any>()
     const {currentUser, updateCurrentUser} = useCurrentUser(state => state)
+    const classes = useStyles()
 
     const onLoginChangeClick = async() => {
         if(isLoggedIn){
@@ -28,8 +38,6 @@ export const LandingPage = () => {
     
     const checkForInvitations = async () => {
         const invites = await getInvitations();
-        console.log(userId)
-        // const myInvites: Array<any> = invites.filter((invite: any) =>  invite.recipientId===userId && invite.status==="pending");
         for (let invite of invites) {
             // eslint-disable-next-line no-restricted-globals
             if(confirm(`You have been invited to play by ${invite.sent_by}`)){
@@ -67,7 +75,7 @@ export const LandingPage = () => {
                 >
                     Reversi
                 </Typography>
-                <div onClick={onLoginChangeClick}>{isLoggedIn ? <Typography>Logout</Typography> : <Typography>Log In</Typography>}</div>
+                <div onClick={onLoginChangeClick} className={classes.logoutButton}>{isLoggedIn ? <Typography>Logout</Typography> : <Typography>Log In</Typography>}</div>
             </Toolbar>
         </AppBar>
         <div style={{display: 'flex', marginTop: '104px'}}>

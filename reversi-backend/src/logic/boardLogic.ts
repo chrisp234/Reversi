@@ -104,7 +104,7 @@ export const isMoveValid = (
 
 type TBoard = Array<Array<"empty" | "black" | "white">>;
 
-const isOutOfBounds = (position:  { row: number; col: number }, boardSize: number) => {
+export const isOutOfBounds = (position:  { row: number; col: number }, boardSize: number) => {
     const {row, col} = position;
     return row < 0 || col < 0 || row >= boardSize || col >= boardSize
 }
@@ -185,4 +185,96 @@ export const getScoreCounts = (board: TBoard) => {
     })
 
     return counts
+}
+
+
+// Define the Reversi game board size
+const BOARD_SIZE = 8;
+
+// Define the possible cell states
+const EMPTY = 0;
+const BLACK = 1;
+const WHITE = -1;
+
+// Define the function to get the valid moves for a player
+function getValidMoves(board: any, player: any) {
+  let validMoves = [];
+  for (let i = 0; i < BOARD_SIZE; i++) {
+    for (let j = 0; j < BOARD_SIZE; j++) {
+      if (board[i][j] === EMPTY) {
+        if (isMoveValid(board, {row: i, col: j}, player)) {
+          validMoves.push([i, j]);
+        }
+      }
+    }
+  }
+  return validMoves;
+}
+
+// Define the evaluation function for the current board state
+function evaluate(board: any, player: any) {
+  let score = 0;
+  for (let i = 0; i < BOARD_SIZE; i++) {
+    for (let j = 0; j < BOARD_SIZE; j++) {
+      if (board[i][j] === player) {
+        score++;
+      } else if (board[i][j] === -player) {
+        score--;
+      }
+    }
+  }
+  return score;
+}
+
+
+// Define the minimax algorithm function
+function minimax(board: any, player: any, depth: any, maximizingPlayer: any) {
+  if (depth === 0) {
+    return evaluate(board, player);
+  }
+  if (maximizingPlayer) {
+    let bestValue = -Infinity;
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      for (let j = 0; j < BOARD_SIZE; j++) {
+        if (board[i][j] === EMPTY) {
+          let newBoard = JSON.parse(JSON.stringify(board));
+          let validMoves = getValidMoves(newBoard, player);
+          if (validMoves.includes([i, j])) {
+            newBoard[i][j] = player;
+            for (let k = 0; k < validMoves.length; k++) {
+              let [x, y] = validMoves[k];
+              if (x !== i || y !== j) {
+                updateBoardWithNewMove(newBoard, {row: x, col: y}, player);
+              }
+            }
+            let value = minimax(newBoard, player, depth - 1, false);
+            bestValue = Math.max(bestValue, value);
+          }
+        }
+      }
+    }
+    return bestValue;
+  } else {
+    let bestValue = Infinity;
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      for (let j = 0; j < BOARD_SIZE; j++) {
+        if (board[i][j] === EMPTY) {
+          let newBoard = JSON.parse(JSON.stringify(board));
+          let validMoves = getValidMoves(newBoard, -player);
+          if (validMoves.includes([i, j])) {
+            newBoard[i][j] = -player;
+            for (let k = 0; k < validMoves.length; k++) {
+              let [x, y] = validMoves[k];
+              if (x !== i || y !== j) {
+                updateBoardWithNewMove(newBoard, {row: x, col: y}, -player as any);
+              }
+            }
+            let value = minimax(newBoard, player, depth - 1, true);
+            bestValue = Math.min(bestValue, value);
+          }
+        }
+      }
+    }
+    return bestValue;
+  }
 }

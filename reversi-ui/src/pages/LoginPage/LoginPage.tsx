@@ -1,6 +1,6 @@
 import { Alert, Button, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
-import { login } from '../../services/AuthService';
+import { login, loginAsGuest } from '../../services/AuthService';
 
 export const LoginPage = () => {
     const isLoggedIn = false;
@@ -17,6 +17,11 @@ export const LoginPage = () => {
         } catch (e) {
             setError("Login credentials invalid; Please try again")
         }
+    }
+
+    const onContinueAsGuestClicked = async() => {
+        await loginAsGuest()
+        window.location.assign('/')
     }
 
     return (
@@ -55,7 +60,7 @@ export const LoginPage = () => {
                 <Typography>Don't have an account? Create one, or continue as a guest</Typography>
                 <div>
                     <Button onClick={() => window.location.assign('/register')}>Register</Button>
-                    <Button>Continue as guest</Button>
+                    <Button onClick={onContinueAsGuestClicked}>Continue as guest</Button>
                 </div>
             </div>
         </div>
