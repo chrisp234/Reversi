@@ -6,7 +6,7 @@
     "scripts": {
       "start": "cd reversi-backend && npx ts-node src/server.ts",
       "test": "echo \"Error: no test specified\" && exit 1",
-      "install": "cd reversi-backend && npm install"
+      "install": "cd reversi-backend && NODE_ENV=dev npm install"
     },
     "author": "",
     "license": "ISC"
