@@ -8,9 +8,9 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "install-ui": "cd reversi-ui && NODE_ENV=dev npm install",
         "install-backend": "cd reversi-backend && NODE_ENV=dev npm install",
-        "install": "npm install -G copyfiles && npm run install-ui && npm run install-backend",
+        "install": "npm run install-ui && npm run install-backend",
         "build-ui": "cd reversi-ui && npm run build",
-        "build": "npm run build-ui && copyfiles -u 2 reversi-ui/build/* reversi-backend/dist"
+        "build": "npm run build-ui && cp -r reversi-ui/build/ reversi-backend/dist"
     },
     "author": "",
     "license": "ISC",
