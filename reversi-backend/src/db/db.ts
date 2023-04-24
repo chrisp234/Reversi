@@ -20,7 +20,10 @@ const { POSTGRES_DB, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_PASSWORD, POSTGRES_U
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
     pool: new Pool({
-      connectionString: DATABASE_URL
+      connectionString: DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
       // host: POSTGRES_HOST,
       // database: POSTGRES_DB,
       // port: parseInt(POSTGRES_PORT ?? ""),
