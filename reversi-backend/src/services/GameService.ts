@@ -38,3 +38,11 @@ export const getGameById = async(id: number) => {
 export const updateBoardAndTurn = async(gameId: number, board: any, nextTurn: 'white' | 'black', status: 'in-progress' | 'complete') => {
   return await db.updateTable('games').where('id','=', gameId).returningAll().set({board: JSON.stringify(board), whose_turn: nextTurn, status}).executeTakeFirst()
 }
+
+export const getEloByUsername = async(username: string) => {
+  return await db.selectFrom('users').select('elo').where('username', '=', username).executeTakeFirst()
+}
+
+export const updateElo = async(username: string, amount: number) => {
+  await db.updateTable('users').where('username', '=', username).set({elo: amount}).execute()
+}
