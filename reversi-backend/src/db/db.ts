@@ -24,7 +24,8 @@ export const db = new Kysely<Database>({
       database: POSTGRES_DB,
       port: parseInt(POSTGRES_PORT ?? ""),
       user: POSTGRES_USER,
-      password: POSTGRES_PASSWORD
+      password: POSTGRES_PASSWORD,
+      ssl: true
     })
   })
 })
