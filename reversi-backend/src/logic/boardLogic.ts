@@ -173,7 +173,7 @@ export const updateBoardWithNewMove = (
 };
 
 
-const getScoreCounts = (board: TBoard) => {
+export const getScoreCounts = (board: TBoard) => {
     let counts = {
         white: 0,
         black: 0,

@@ -2,9 +2,9 @@
 
 
 import express, { Request, Response } from 'express';
-import { hasAnyMovesLeft, isMoveValid, updateBoardWithNewMove } from '../logic/boardLogic';
+import { getScoreCounts, hasAnyMovesLeft, isMoveValid, updateBoardWithNewMove } from '../logic/boardLogic';
 import { validateSessionToken } from '../middleware/auth';
-import { getGameById, updateBoardAndTurn } from '../services/GameService';
+import { getEloByUsername, getGameById, updateBoardAndTurn, updateElo } from '../services/GameService';
 
 export const makeGameController = (app: express.Express) => {
   app.post('/api/v1/games', validateSessionToken, createGame)
@@ -37,6 +37,9 @@ const makeMove = async(req: Request, res: Response) => {
   if(!game){
     res.status(404).send("Game not found")
   }else{
+    if(game.status === 'complete'){
+      res.status(403).send("You cannot make moves once a game is completed");
+    }
     if(game.whose_turn !== game.settings.players.find((player: any) => player.username === username).color) {
       res.status(403).send("Bad boi, its not ur turn")
     }
@@ -45,6 +48,23 @@ const makeMove = async(req: Request, res: Response) => {
       const newBoard = updateBoardWithNewMove(game.board, position, game.whose_turn)
       const nextTurnColor = game.whose_turn == 'white' ? 'black' : 'white'
       const hasMovesLeft = hasAnyMovesLeft(newBoard, nextTurnColor);
+      if(!hasMovesLeft){
+        const { white, black } = getScoreCounts(newBoard);
+        const winningColor = white < black ? 'black' : 'white'
+        console.log(game.settings)
+        // If it's a tie, then we don't change ELOs at all
+        if(white !== black){
+          for (let person of game.settings.players) {
+            const { elo } = await getEloByUsername(person.username) as any
+            if(person.color === winningColor) {
+              await updateElo(person.username, parseInt(elo)+50)
+            }else{
+              await updateElo(person.username, parseInt(elo)-50)
+            }
+          }
+        }
+
+      }
       const updatedGame = updateBoardAndTurn(game.id, newBoard, nextTurnColor, hasMovesLeft ? 'in-progress' : 'complete')
       res.status(200).json(updatedGame)
     }else{
@@ -55,15 +75,3 @@ const makeMove = async(req: Request, res: Response) => {
   }
 
 }
-// Creating game takes the following params:
-// - boardSize
-// - gameTypes (ai, online, local)
-// - player(s)
-// And returns
-// - gameId
-
-
-// An invitation creates a game?
-// yes lets do that
-
-
