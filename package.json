@@ -4,11 +4,17 @@
     "description": "",
     "main": "reversi-backend/src/server.ts",
     "scripts": {
-      "start": "cd reversi-backend && npx ts-node src/server.ts",
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "install": "cd reversi-backend && NODE_ENV=dev npm install"
+        "start": "cd reversi-backend && npx ts-node src/server.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "install-ui": "cd reversi-ui && NODE_ENV=dev npm install",
+        "install-backend": "cd reversi-backend && NODE_ENV=dev npm install",
+        "install": "npm install -G copyfiles && npm run install-ui && npm run install-backend",
+        "build-ui": "cd reversi-ui && npm run build",
+        "build": "npm run build-ui && copyfiles -u 2 reversi-ui/build/* reversi-backend/dist"
     },
     "author": "",
-    "license": "ISC"
-  }
-  
+    "license": "ISC",
+    "dependencies": {
+        "copyfiles": "^2.4.1"
+    }
+}
