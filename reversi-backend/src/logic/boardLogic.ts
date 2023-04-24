@@ -129,7 +129,6 @@ export const updateBoardWithNewMove = (
     ]
 
     directions.forEach(direction => {
-        console.log("DIRECTION", direction)
         let positionsToFlip = []
         let currRow = position.row + direction.x;
         let currCol = position.col + direction.y

@@ -31,6 +31,22 @@ export const createGameFromInvite = async (inviteId: number) => {
   return game;
 };
 
+export const createNewGame  = async(type: "local" | "ai", settings: any ) => {
+  const boardSize = settings.boardSize;
+  const game = await db
+    .insertInto("games")
+    .values({
+      status: "in-progress",
+      type,
+      settings: JSON.stringify(settings),
+      whose_turn: "white",
+      board: JSON.stringify(makeBoard(boardSize)),
+    })
+    .returningAll()
+    .executeTakeFirst();
+  return game;
+}
+
 export const getGameById = async(id: number) => {
   return await db.selectFrom('games').selectAll().where('id', '=', id).executeTakeFirst()
 }
