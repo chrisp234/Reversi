@@ -1,0 +1,14 @@
+{
+    "name": "reversi",
+    "version": "1.0.0",
+    "description": "",
+    "main": "reversi-backend/src/server.ts",
+    "scripts": {
+      "start": "cd reversi-backend && flyway migrate && nodemon src/server.ts",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "install": "cd reversi-backend && npm install"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+  
