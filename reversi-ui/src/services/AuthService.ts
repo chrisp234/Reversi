@@ -13,6 +13,21 @@ export const login = async(username: string, password: string) => {
     }
 }
 
+export const register = async(username: string, password: string) => {
+    const response = await fetch('/api/v1/register',{
+        method: 'POST',   
+        headers: {
+            "Content-Type": "application/json",
+        },    
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin",
+        body: JSON.stringify({username, password})
+    })
+    if (response.status !== 201){
+        throw new Error("register failed")
+    }
+}
+
 export const logout = async() => {
     const response = await fetch('/api/v1/logout',{
         method: 'POST',   
@@ -33,7 +48,7 @@ export const checkIsLoggedIn = async(): Promise<boolean> => {
     return false
 }
 
-export const getUserId = async(): Promise<number> => {
+export const getUserId = async(): Promise<{username: string}> => {
     const response = await fetch('/api/v1/me')
     return await response.json()
 }

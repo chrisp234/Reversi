@@ -3,12 +3,12 @@ import { create } from 'zustand'
 interface CurrentUserState {
     currentUser: {
         id: number | undefined;
-        userName: string | undefined;
+        username: string | undefined;
     };
-    updateCurrentUser: (userId: number, userName: string | undefined) => void;
+    updateCurrentUser: (userId: number, username: string | undefined) => void;
 }
 
 export const useCurrentUser = create<CurrentUserState>((set) => ({
-    currentUser: { id: undefined, userName: undefined },
-    updateCurrentUser: (userId, userName) => set(() => ({ currentUser: { id: userId, userName } })),
+    currentUser: { id: undefined, username: undefined },
+    updateCurrentUser: (userId, username) => set(() => ({ currentUser: { id: userId, username } })),
 }));

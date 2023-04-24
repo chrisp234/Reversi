@@ -9,7 +9,7 @@ import { StartGameCard } from './StartGameCard';
 
 export const LandingPage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>()
-    const [userId, setUserId] = useState<number>()
+    const [userId, setUserId] = useState<any>()
     const {currentUser, updateCurrentUser} = useCurrentUser(state => state)
 
     const onLoginChangeClick = async() => {
@@ -29,26 +29,27 @@ export const LandingPage = () => {
     const checkForInvitations = async () => {
         const invites = await getInvitations();
         console.log(userId)
-        const myInvites: Array<any> = invites.filter((invite: any) =>  invite.recipientId===userId && invite.status==="pending");
-        for (let invite of myInvites) {
+        // const myInvites: Array<any> = invites.filter((invite: any) =>  invite.recipientId===userId && invite.status==="pending");
+        for (let invite of invites) {
             // eslint-disable-next-line no-restricted-globals
-            if(confirm(`You have been invited to play by ${invite.sender}`)){
-                await acceptInvitation(invite.inviteId)
+            if(confirm(`You have been invited to play by ${invite.sent_by}`)){
+                const game = await acceptInvitation(invite.id)
+                window.location.assign(`/game/${game.id}`)
             }else{
-                await declineInvitation(invite.inviteId);  
+                await declineInvitation(invite.id);  
             }
         }
     }
  
     const fetchUserId = async () => {
-        const uId = await getUserId()
-        updateCurrentUser(uId, undefined)
-        setUserId(uId)
+        const user = await getUserId()
+        updateCurrentUser(user.username as any, user.username)
+        setUserId(user.username)
     }
 
     useEffect(()=>{
         checkLoggedIn()
-        setInterval(checkForInvitations, 1000);
+        setInterval(checkForInvitations, 10000);
     }, [])
 
     useEffect(() => {

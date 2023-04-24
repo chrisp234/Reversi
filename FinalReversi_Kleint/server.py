@@ -105,11 +105,11 @@ async def decline_invite(id, request: Request):
 async def start_game():
     pass
 
-@app.post("/api/v1/games/:id/move")
+@app.post("/api/v1/games/{id}/move")
 async def make_move():
     pass
 
-@app.get("/api/v1/games/:id")
+@app.get("/api/v1/games/{id}")
 async def get_game():
     pass
 

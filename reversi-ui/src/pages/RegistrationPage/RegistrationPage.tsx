@@ -1,21 +1,20 @@
 import { Alert, Button, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
-import { login } from '../../services/AuthService';
+import { login, register } from '../../services/AuthService';
 
-export const LoginPage = () => {
-    const isLoggedIn = false;
+export const RegistrationPage = () => {
     const [password, setPassword] = useState<string>()
     const [username, setUsername] = useState<string>()
     const [error, setError] = useState<string>();
     const theme = useTheme()
 
-    const onLoginClicked = async () => {
+    const onRegisterClicked = async () => {
         try {
-            await login(username!, password!)
+            await register(username!, password!)
             setError(undefined)
             window.location.assign('/')
         } catch (e) {
-            setError("Login credentials invalid; Please try again")
+            setError("Registration failed; Please try again")
         }
     }
 
@@ -47,14 +46,14 @@ export const LoginPage = () => {
                         fullWidth 
                         variant="contained" 
                         sx={{ marginTop: '16px' }} 
-                        onClick={onLoginClicked}
+                        onClick={onRegisterClicked}
                     >
-                        Login
+                        Register
                     </Button>
                 </div>
-                <Typography>Don't have an account? Create one, or continue as a guest</Typography>
+                <Typography>Have an account?</Typography>
                 <div>
-                    <Button onClick={() => window.location.assign('/register')}>Register</Button>
+                    <Button onClick={()=> window.location.assign('/login')}>Login</Button>
                     <Button>Continue as guest</Button>
                 </div>
             </div>
