@@ -4,7 +4,7 @@
     "description": "",
     "main": "reversi-backend/src/server.ts",
     "scripts": {
-      "start": "cd reversi-backend && nodemon src/server.ts",
+      "start": "cd reversi-backend && node src/server.ts",
       "test": "echo \"Error: no test specified\" && exit 1",
       "install": "cd reversi-backend && npm install"
     },
