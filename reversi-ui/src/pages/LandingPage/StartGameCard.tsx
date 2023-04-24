@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { createGame } from "../../services/GameService";
 import { createInvitation } from "../../services/InvitationService";
 import { fetchOnlinePlayers } from "../../services/LeaderboardService";
 import { useCurrentUser } from "../../stores/CurrentUserStore";
@@ -68,12 +69,16 @@ const NewGameModal = ({ gameMode, onClose }: INewGameModalProps) => {
     },
   ];
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (gameMode === "online") {
-      createInvitation(opponent!, { boardSize, players: [{
+      await createInvitation(opponent!, { boardSize, players: [{
         color, username: currentUser.username
       },
     {color: otherColor, username: opponent}] });
+    }
+    if (gameMode === "local") {
+        const game = await createGame('local', { boardSize })
+        window.location.assign(`/game/${game.id}`)
     }
   };
 
