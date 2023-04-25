@@ -24,6 +24,7 @@ const pieceBelowIsSameColor = (
   return board[position.row + 1][position.col] === color;
 };
 
+
 const pieceLeftIsSameColor = (
   board: Array<Array<string>>,
   position: { row: number; col: number },
@@ -57,7 +58,7 @@ export const getCoordinatesOfEmptySpots = (board: TBoard): Array<TPosition> => {
     const positions=[]
     for(let i=0; i<board.length; i++){
         for(let j=0; j<board.length; j++){
-            if(board[i][j] === 'empty'){
+            if(isPositionEmpty(board,{ row: i, col: j } )){
                 positions.push({ row: i, col: j})
             }
         }  
@@ -278,3 +279,21 @@ function minimax(board: any, player: any, depth: any, maximizingPlayer: any) {
     return bestValue;
   }
 }
+
+export const elo = ([...ratings], kFactor = 32, selfRating?: any) => {
+  const [a, b] = ratings;
+  const expectedScore = (self: any, opponent: any) => 1 / (1 + 10 ** ((opponent - self) / 400));
+  const newRating = (rating: any, i: any) =>
+    (selfRating || rating) + kFactor * (i - expectedScore(i ? a : b, i ? b : a));
+  if (ratings.length === 2) {
+    return [newRating(a, 1), newRating(b, 0)];
+  }
+  for (let i = 0, len = ratings.length; i < len; i++) {
+    let j = i;
+    while (j < len - 1) {
+      j++;
+      [ratings[i], ratings[j]] = elo([ratings[i], ratings[j]], kFactor);
+    }
+  }
+  return ratings;
+};

@@ -2,7 +2,7 @@
 
 
 import express, { Request, Response } from 'express';
-import { getScoreCounts, hasAnyMovesLeft, isMoveValid, updateBoardWithNewMove } from '../logic/boardLogic';
+import { elo, getScoreCounts, hasAnyMovesLeft, isMoveValid, updateBoardWithNewMove } from '../logic/boardLogic';
 import { validateSessionToken } from '../middleware/auth';
 import { createNewGame, getEloByUsername, getGameById, updateBoardAndTurn, updateElo } from '../services/GameService';
 
@@ -82,13 +82,26 @@ const makeMove = async(req: Request, res: Response) => {
         const winningColor = white < black ? 'black' : 'white'
         console.log(game.settings)
         // If it's a tie, then we don't change ELOs at all
+        const oldElos = [null, null]
         if(white !== black){
           for (let person of game.settings.players) {
             const { elo } = await getEloByUsername(person.username) as any
             if(person.color === winningColor) {
-              await updateElo(person.username, parseInt(elo)+50)
+              oldElos[0] = elo
+              // await updateElo(person.username, parseInt(elo)+50)
             }else{
-              await updateElo(person.username, parseInt(elo)-50)
+              oldElos[1] = elo
+              // await updateElo(person.username, parseInt(elo)-50)
+            }
+          }
+          const newElos = elo(oldElos, 32)
+
+          for (let person of game.settings.players) {
+            const { elo } = await getEloByUsername(person.username) as any
+            if(person.color === winningColor) {
+              await updateElo(person.username, Math.round(newElos[0]))
+            }else{
+              await updateElo(person.username, Math.round(newElos[1]))
             }
           }
         }
