@@ -8,7 +8,7 @@ export const login = async(username: string, password: string) => {
         credentials: "same-origin",
         body: JSON.stringify({username, password})
     })
-    if (response.status !== 200){
+    if (response.status !== 201){
         throw new Error("login failed")
     }
 }
