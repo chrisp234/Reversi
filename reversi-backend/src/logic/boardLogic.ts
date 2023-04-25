@@ -76,6 +76,18 @@ export const hasAnyMovesLeft = (board: TBoard, color: string) => {
     return false;
 }
 
+export const findAvailableSpot = (board: any, color: any) => {
+  const options = getCoordinatesOfEmptySpots(board)
+  const validOptions: Array<TPosition> = []
+  options.forEach((option) => {
+    if(isMoveValid(board, option, color)){
+      validOptions.push(option)
+    }
+  })
+
+  return validOptions[Math.floor(Math.random()*validOptions.length)]
+}
+
 export const isMoveValid = (
   board: Array<Array<string>>,
   position: { row: number; col: number },

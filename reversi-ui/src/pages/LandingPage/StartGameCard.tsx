@@ -86,6 +86,23 @@ const NewGameModal = ({ gameMode, onClose }: INewGameModalProps) => {
       const game = await createGame("local", { boardSize });
       window.location.assign(`/game/${game.id}`);
     }
+    if (gameMode === 'ai') {
+        const settings = {
+            boardSize,
+            players: [
+                {
+                    username: currentUser.username,
+                    color: 'white'
+                },
+                {
+                    username: 'ai',
+                    color: 'black'
+                }
+            ]
+        }
+        const game = await createGame("ai", settings)
+        window.location.assign(`/game/${game.id}`)
+    }
   };
 
   return (
